@@ -29,7 +29,7 @@ export default function AVLSMap() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className="h-full w-full">
+    <div style={{ height: 'calc(100vh - 64px)', width: '100%' }}>
       <MapContainer center={[28.61, 77.20]} zoom={10} style={{ height: '100%', width: '100%' }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {buses.map((bus) => (

@@ -71,13 +71,48 @@ def seed():
         ("DL-1PC-0001", "Volvo 9400"),
         ("UP-14-BT-1234", "Tata Marcopolo"),
     ]
+    buses_objs = []
     for num, model in buses_data:
         bus = db.query(Bus).filter(Bus.bus_number == num).first()
         if not bus:
             bus = Bus(bus_number=num, model=model, current_location=from_shape(Point(77.20, 28.61), srid=4326))
             db.add(bus)
+            db.commit()
+            db.refresh(bus)
+        buses_objs.append(bus)
+
+    # 6. Create Schedules
+    route_objs_list = db.query(Route).all()
+    if buses_objs and route_objs_list:
+        schedule = Schedule(
+            bus_id=buses_objs[0].id,
+            route_id=route_objs_list[0].id,
+            driver_id=db.query(User).filter(User.username == "driver1").first().id,
+            conductor_id=db.query(User).filter(User.username == "conductor1").first().id,
+            departure_time=datetime.datetime.utcnow(),
+            arrival_time=datetime.datetime.utcnow() + datetime.timedelta(hours=2)
+        )
+        db.add(schedule)
+
+    # 7. Create Incidents
+    incident = Incident(
+        bus_id=buses_objs[0].id,
+        description="Minor engine overheating near Ghaziabad.",
+        severity="medium",
+        status="open"
+    )
+    db.add(incident)
+
+    # 8. Create Notices
+    notice = Notice(
+        title="Route Diversion Alert",
+        content="Delhi-Meerut Express diverted due to road maintenance near Modinagar.",
+        created_by=db.query(User).filter(User.username == "admin").first().id
+    )
+    db.add(notice)
+
     db.commit()
-    print("Database seeded successfully!")
+    print("Database seeded successfully with schedules, incidents, and notices!")
     db.close()
 
 if __name__ == "__main__":

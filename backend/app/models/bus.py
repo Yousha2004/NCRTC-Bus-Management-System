@@ -55,3 +55,12 @@ class Notice(Base):
     content = Column(String)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     created_by = Column(Integer, ForeignKey("users.id"))
+
+class BusLocationHistory(Base):
+    __tablename__ = "bus_location_history"
+    id = Column(Integer, primary_key=True, index=True)
+    bus_id = Column(Integer, ForeignKey("buses.id"))
+    location = Column(Geometry("POINT", srid=4326))
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+
+    bus = relationship("Bus")

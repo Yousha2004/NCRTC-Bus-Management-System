@@ -1,7 +1,7 @@
 import time
 import random
 from app.db.session import SessionLocal
-from app.models.bus import Bus, Route
+from app.models.bus import Bus, Route, BusLocationHistory
 from geoalchemy2.shape import from_shape, to_shape
 from shapely.geometry import Point, LineString
 import datetime
@@ -19,8 +19,16 @@ def simulate():
                 path = to_shape(route.path)
                 fraction = random.random()
                 new_point = path.interpolate(fraction, normalized=True)
-                bus.current_location = from_shape(new_point, srid=4326)
+                loc = from_shape(new_point, srid=4326)
+                bus.current_location = loc
                 bus.last_updated = datetime.datetime.utcnow()
+
+                history = BusLocationHistory(
+                    bus_id=bus.id,
+                    location=loc,
+                    timestamp=bus.last_updated
+                )
+                db.add(history)
             db.commit()
             time.sleep(5)
     except KeyboardInterrupt:
