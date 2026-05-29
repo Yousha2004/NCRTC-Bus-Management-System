@@ -1,9 +1,22 @@
+import os
+import threading
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import auth
 from app.api.endpoints import avls, scheduling, ims, cms
 
 app = FastAPI(title="NCRTC Bus Management System API")
+
+
+@app.on_event("startup")
+def _maybe_start_simulator():
+    """When RUN_SIMULATOR is set, animate the live map from inside the API
+    process (a daemon thread) so no separate always-on worker is needed in the
+    cloud. Locally you can still run scripts/tick.py instead."""
+    if os.getenv("RUN_SIMULATOR", "").lower() in ("1", "true", "yes"):
+        from scripts.tick import simulate
+        threading.Thread(target=simulate, daemon=True).start()
+        print("Live-map simulator started (RUN_SIMULATOR enabled).")
 
 app.add_middleware(
     CORSMiddleware,

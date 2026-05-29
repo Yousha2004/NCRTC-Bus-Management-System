@@ -4,3 +4,14 @@ __pycache__
 dist
 .pytest_cache
 *.pyc
+
+# Python virtualenvs
+.venv/
+venv/
+env/
+
+# logs
+*.log
+
+# OS / editor
+.DS_Store

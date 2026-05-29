@@ -1,0 +1,24 @@
+# Render Blueprint for the NCRTC backend (FastAPI).
+# Deploy: Render dashboard -> New -> Blueprint -> pick your repo.
+# DATABASE_URL and SECRET_KEY are marked sync:false -> set them in the dashboard.
+services:
+  - type: web
+    name: ncrtc-backend
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: DATABASE_URL          # your Neon connection string (postgresql://...?sslmode=require)
+        sync: false
+      - key: SECRET_KEY            # any long random string
+        sync: false
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "1440"
+      - key: RUN_SIMULATOR         # animate the live map from inside the API process
+        value: "true"
