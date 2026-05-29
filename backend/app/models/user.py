@@ -12,8 +12,12 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
+    full_name = Column(String)
+    phone = Column(String)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
     role_id = Column(Integer, ForeignKey("roles.id"))
+    depot_id = Column(Integer, ForeignKey("depots.id"), nullable=True)
 
     role = relationship("Role")
+    depot = relationship("Depot")

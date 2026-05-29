@@ -3,8 +3,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool, create_engine
 from alembic import context
 from app.db.session import Base
-from app.models.user import User, Role
-from app.models.bus import Bus, Route, Station, Schedule, Incident, Notice
+import app.models  # noqa: F401  -- registers every model on Base.metadata
 
 config = context.config
 if config.config_file_name is not None:

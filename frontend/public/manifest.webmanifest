@@ -1,0 +1,16 @@
+{
+  "name": "NCRTC Driver",
+  "short_name": "NCRTC",
+  "description": "NCRTC driver app — duty, notices, panic.",
+  "start_url": "/driver",
+  "display": "standalone",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3448/3448339.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
